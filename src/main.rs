@@ -27,8 +27,8 @@ async fn main() {
     // Roteamento
     let app = Router::new()
         // API Encurtador de Links
-        .route("/api/shorten", post(handlers::shorten::shorten_link))
-        .route("/r/:short_code", get(handlers::shorten::redirect_link))
+        .route("/api/shorten", post(handlers::shortener::shorten_link))
+        .route("/r/:short_code", get(handlers::shortener::redirect_link))
         // API Analisador de Senhas
         .route("/api/analyze-password", post(handlers::password::analyze_password))
         // API Transcritor de Áudio
