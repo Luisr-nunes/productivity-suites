@@ -24,7 +24,7 @@ pub async fn shorten_link(
     let link = Link {
         original_url: payload.url.clone(),
         short_code: short_code.clone(),
-        created_at: bson::DateTime::now(),
+        created_at: mongodb::bson::DateTime::now(),
     };
     
     match collection.insert_one(&link).await {
