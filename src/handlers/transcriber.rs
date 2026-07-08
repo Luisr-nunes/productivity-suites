@@ -38,7 +38,7 @@ pub async fn upload_audio(
         status: "completed".to_string(),
         content: Some(content.clone()),
         language: None,
-        created_at: bson::DateTime::now(),
+        created_at: mongodb::bson::DateTime::now(),
     };
 
     let collection = db.collection::<Transcription>("transcriptions");

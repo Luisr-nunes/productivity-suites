@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Transcription {
@@ -8,7 +7,7 @@ pub struct Transcription {
     pub status: String,
     pub content: Option<String>,
     pub language: Option<String>,
-    pub created_at: bson::DateTime,
+    pub created_at: mongodb::bson::DateTime,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

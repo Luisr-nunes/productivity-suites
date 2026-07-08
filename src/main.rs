@@ -28,13 +28,13 @@ async fn main() {
     let app = Router::new()
         // API Encurtador de Links
         .route("/api/shorten", post(handlers::shortener::shorten_link))
-        .route("/r/:short_code", get(handlers::shortener::redirect_link))
+        .route("/r/{short_code}", get(handlers::shortener::redirect_link))
         // API Analisador de Senhas
         .route("/api/analyze-password", post(handlers::password::analyze_password))
         // API Transcritor de Áudio
         .route("/api/transcriptions/upload", post(handlers::transcriber::upload_audio))
         .route("/api/transcriptions", get(handlers::transcriber::list_transcriptions))
-        .route("/api/transcriptions/:id", get(handlers::transcriber::get_transcription))
+        .route("/api/transcriptions/{id}", get(handlers::transcriber::get_transcription))
         // Estado compartilhado (MongoDB) e Middlewares
         .with_state(db)
         .layer(cors)

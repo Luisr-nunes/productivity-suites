@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct Link {
     pub original_url: String,
     pub short_code: String,
-    pub created_at: bson::DateTime,
+    pub created_at: mongodb::bson::DateTime,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

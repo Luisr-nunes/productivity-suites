@@ -4,7 +4,7 @@ import { KeyRound, ShieldAlert, ShieldCheck } from 'lucide-react';
 
 export default function PasswordAnalyzer() {
   const [password, setPassword] = useState('');
-  const [analysis, setAnalysis] = useState('');
+  const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function PasswordAnalyzer() {
       if (password) {
         analyzePassword(password);
       } else {
-        setAnalysis('');
+        setAnalysis(null);
       }
     }, 500);
 
@@ -29,7 +29,7 @@ export default function PasswordAnalyzer() {
       });
       const data = await response.json();
       if (response.ok) {
-        setAnalysis(data.output);
+        setAnalysis(data);
       }
     } catch (err) {
       console.error(err);
@@ -38,10 +38,11 @@ export default function PasswordAnalyzer() {
   };
 
   const getStrengthColor = () => {
-    if (analysis.includes('FRACA')) return 'var(--danger)';
-    if (analysis.includes('MÉDIA')) return '#f59e0b';
-    if (analysis.includes('FORTE')) return 'var(--success)';
-    return 'var(--text-secondary)';
+    if (!analysis) return 'var(--text-secondary)';
+    if (analysis.strength === 'FRACA') return 'var(--danger)';
+    if (analysis.strength === 'MÉDIA') return '#f59e0b';
+    if (analysis.strength === 'FORTE') return 'var(--success)';
+    return 'var(--success)'; // MUITO FORTE
   };
 
   return (
@@ -78,9 +79,31 @@ export default function PasswordAnalyzer() {
             animate={{ opacity: 1, height: 'auto' }}
             style={{ background: 'rgba(0,0,0,0.3)', padding: '1.5rem', borderRadius: '8px', borderLeft: `4px solid ${getStrengthColor()}` }}
           >
-            <pre style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap', color: 'var(--text-primary)', margin: 0 }}>
-              {analysis}
-            </pre>
+            <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong style={{ fontSize: '1.2rem', color: getStrengthColor() }}>
+                Força: {analysis.strength}
+              </strong>
+              <span className="text-secondary">Pontuação: {analysis.score} / 7</span>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.9rem' }}>
+              <div>Comprimento: <strong style={{color: 'var(--text-primary)'}}>{analysis.length}</strong></div>
+              <div>Maiúsculas: <strong style={{color: analysis.has_uppercase ? 'var(--success)' : 'var(--danger)'}}>{analysis.has_uppercase ? 'Sim' : 'Não'}</strong></div>
+              <div>Minúsculas: <strong style={{color: analysis.has_lowercase ? 'var(--success)' : 'var(--danger)'}}>{analysis.has_lowercase ? 'Sim' : 'Não'}</strong></div>
+              <div>Números: <strong style={{color: analysis.has_number ? 'var(--success)' : 'var(--danger)'}}>{analysis.has_number ? 'Sim' : 'Não'}</strong></div>
+              <div>Especiais: <strong style={{color: analysis.has_special ? 'var(--success)' : 'var(--danger)'}}>{analysis.has_special ? 'Sim' : 'Não'}</strong></div>
+            </div>
+
+            {analysis.suggestions && analysis.suggestions.length > 0 && (
+              <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <h4 style={{ marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Sugestões:</h4>
+                <ul style={{ paddingLeft: '1.5rem', margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                  {analysis.suggestions.map((sug, i) => (
+                    <li key={i} style={{ marginBottom: '0.25rem' }}>{sug}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </motion.div>
         )}
       </motion.div>
