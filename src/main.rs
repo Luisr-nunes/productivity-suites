@@ -39,7 +39,7 @@ async fn main() {
         .with_state(db)
         .layer(cors)
         // Arquivos Estáticos do Frontend (React Vite build path: frontend/dist)
-        .nest_service("/", ServeDir::new("frontend/dist").fallback(ServeFile::new("frontend/dist/index.html")));
+        .fallback_service(ServeDir::new("frontend/dist").fallback(ServeFile::new("frontend/dist/index.html")));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     info!("Servidor unificado rodando em http://{}", addr);
